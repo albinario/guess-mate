@@ -17,19 +17,14 @@
 	<div id="app" class="container">
 		<div id="top">
 			<h1>Guess Mate</h1>
-			<div id="q-count">1/20</div>
+			<div id="q-count">q/max</div>
 		</div>
-
-		<img src="albin_lindeborg.jpg" class="img-fluid rounded" alt="">
-		<div class="choices text-center mt-3">
-			<button class="choice btn btn-warning">Albin Lindeborg</button>
-			<button class="choice btn btn-warning">Albin Lindeborg</button>
-			<button class="choice btn btn-warning">Albin Lindeborg</button>
-			<button class="choice btn btn-warning">Albin Lindeborg</button>
-		</div>
+		<img src="albin_lindeborg.jpg" id="img-mate" class="img-fluid rounded mx-auto" alt="Who is this mate?">
+		<div id="options" class="options text-center mt-3"></div>
 		<button class="btn btn-success w-100 mt-3" disabled>Next mate</button>
 	</div>
 
+	<script src="students.js"></script>
 	<script src="app.js"></script>
 </body>
 </html>

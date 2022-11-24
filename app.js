@@ -1,3 +1,66 @@
+const imgEl = document.querySelector('#img-mate');
+const optionsEl = document.querySelector('#options');
+
+const getRandomNumber = max => {
+	return Math.ceil( Math.random() * max );
+}
+
+// Pass an id, return id along with three OTHER id's, as an array
+const getOptions = id => {
+    options = [id];
+    while (options.length < 4) {
+        let anotherId = getRandomNumber(students.length);
+        if (!options.includes(anotherId)) {
+            options.push(anotherId);
+        }
+    }
+    return options;
+}
+
+// pass an id, return name of student, as a string
+const getName = id => {
+    return students.find(student => student.id === id).name;
+}
+
+const shuffleArray = array => {
+	for (let i = array.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		const temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+	}
+}
+
+const playGuessMate = () => { 
+    const rounds = 40;
+    let round = 1;
+    let score = 0;
+    
+    shuffleArray(students);
+    
+    const playRound = student => {
+        imgEl.setAttribute('src', student.image);
+        const correctId = student.id;
+        
+        const options = getOptions(student.id);
+        shuffleArray(options);
+        
+        options.forEach(id => {
+            optionsEl.innerHTML += `<button class="option btn btn-warning" id="${id}">${getName(id)}</button>`;
+        });
+        
+        optionsEl.addEventListener('click', e => {
+            const answer = Number(e.target.id);
+            if (answer === correctId) {
+                score++;
+            }
+            round++;
+        });
+    }
+    playRound(students[0]);
+}
+playGuessMate();
+
 /**
  * Guess the number
  *

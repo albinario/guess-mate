@@ -5,22 +5,23 @@ body > * {
 #top {
 	display: flex;
 	justify-content: space-between;
+	align-items: center;
 }
 
 img {
     display: block;
-    max-width: 100%;
-	/* border-radius: 10px; */
+    max-width: 500px;
+	border: 5.5px solid #f6c344;
 }
 
-.choices {
+.options {
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-evenly;
 	gap: 1em;
 }
 
-.choices .choice {
+.options .option {
 	flex-basis: 48%;
 	padding: 3em;
 }
