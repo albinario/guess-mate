@@ -1,25 +1,9 @@
 const imgEl = document.querySelector('#img-mate');
 const optionsEl = document.querySelector('#options');
+const btnNextEl = document.querySelector('#btn-next');
 
 const getRandomNumber = max => {
 	return Math.ceil( Math.random() * max );
-}
-
-// Pass an id, return id along with three OTHER id's, as an array
-const getOptions = id => {
-    options = [id];
-    while (options.length < 4) {
-        let anotherId = getRandomNumber(students.length);
-        if (!options.includes(anotherId)) {
-            options.push(anotherId);
-        }
-    }
-    return options;
-}
-
-// pass an id, return name of student, as a string
-const getName = id => {
-    return students.find(student => student.id === id).name;
 }
 
 const shuffleArray = array => {
@@ -31,33 +15,68 @@ const shuffleArray = array => {
 	}
 }
 
+// Pass an id, return id along with three OTHER id's, as an array
+const getOptions = id => {
+    options = [id];
+    while (options.length < 4) {
+        let anotherId = getRandomNumber(students.length);
+        if (!options.includes(anotherId)) {
+            options.push(anotherId);
+        }
+    }
+    shuffleArray(options);
+    return options;
+}
+
+// pass an id, return name of student, as a string
+const getName = id => {
+    return students.find(student => student.id === id).name;
+}
+
 const playGuessMate = () => { 
-    const rounds = 40;
-    let round = 1;
+    const rounds = 3;
+    let round = 0;
     let score = 0;
     
     shuffleArray(students);
     
     const playRound = student => {
         imgEl.setAttribute('src', student.image);
-        const correctId = student.id;
-        
+        optionsEl.innerHTML = '';
         const options = getOptions(student.id);
-        shuffleArray(options);
         
+        if (round === rounds) {
+            btnNextEl.innerText = 'See result';
+        }
+        round++;
+
         options.forEach(id => {
             optionsEl.innerHTML += `<button class="option btn btn-warning" id="${id}">${getName(id)}</button>`;
         });
         
         optionsEl.addEventListener('click', e => {
-            const answer = Number(e.target.id);
-            if (answer === correctId) {
+            document.querySelectorAll('.option').forEach(option => {
+                option.disabled = true;
+            });
+            e.target.classList.remove('btn-warning');
+            if (Number(e.target.id) === student.id) {
+                e.target.classList.add('btn-success');
                 score++;
+            } else {
+                e.target.classList.add('btn-danger')
             }
-            round++;
+            btnNextEl.disabled = false;
+        });
+
+        btnNextEl.addEventListener('click', e => {
+            if (round <= rounds) {
+                playRound(students[round]);
+            } else {
+                optionsEl.innerHTML = `<p>${score}</p>`;
+            }
         });
     }
-    playRound(students[0]);
+    playRound(students[round]);
 }
 playGuessMate();
 
