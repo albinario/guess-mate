@@ -42,6 +42,7 @@ const playGuessMate = () => {
 	let score = 0;
 
 	roundsEl.innerText = rounds;
+	btnNextEl.innerText = "Next mate";
 
 	shuffleArray(studentsPlay);
 
@@ -51,7 +52,6 @@ const playGuessMate = () => {
 		roundEl.innerText = round;
 
 		const correctId = student.id;
-		const correctName = student.name;
 
 		imgEl.setAttribute('src', student.image);
 
@@ -79,10 +79,11 @@ const playGuessMate = () => {
 			if (answer === correctId) {
 				e.target.classList.add('btn-success');
 				score++;
-				console.log("New score:", score);
 			} else {
 				e.target.classList.add('btn-danger');
 			}
+			console.log("Score:", score);
+
 			btnNextEl.disabled = false;
 		}, {once: true });
 	}
@@ -92,7 +93,7 @@ const playGuessMate = () => {
 			playRound(studentsPlay[round]);
 		} else {
 			optionsEl.innerHTML = `<span>${score}</span>`;
-			btnNextEl.innerText = 'Play again';
+			btnNextEl.innerText = "Play again";
 			btnNextEl.addEventListener('click', () => {
 				playGuessMate();
 			}, { once: true });
