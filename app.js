@@ -7,8 +7,6 @@ const btnNextEl = document.querySelector('#btn-next');
 const roundsEl = document.querySelector('#rounds');
 const roundEl = document.querySelector('#round')
 
-
-
 const getRandomNumber = max => {
 	return Math.ceil( Math.random() * max );
 }
@@ -22,7 +20,7 @@ const shuffleArray = array => {
 	}
 }
 
-// Pass an id, return id along with three OTHER id's, as an array
+// Pass a student id, return same id shuffled along with three other unique id's, as an array
 const getOptions = id => {
 	let options = [id]; 
 	while (options.length < 4) {
@@ -35,10 +33,8 @@ const getOptions = id => {
 	return options;
 }
 
-// pass an id, return name of student, as a string
-const getName = id => {
-	return studentsPlay.find(student => student.id === id).name;
-}
+// pass a student id, return name of student, as a string
+const getName = id => studentsPlay.find(student => student.id === id).name;
 
 const playGuessMate = () => {
 	const rounds = 3;
