@@ -25,3 +25,7 @@ img {
 	flex-basis: 48%;
 	padding: 3em;
 }
+
+.card-body {
+	border: 1px solid #f6c344;
+}

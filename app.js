@@ -48,6 +48,7 @@ const playGuessMate = () => {
 
 	const playRound = student => {
 		round++;
+		console.log(round);
 		btnNextEl.disabled = true;
 		roundEl.innerText = round;
 
@@ -56,10 +57,6 @@ const playGuessMate = () => {
 		imgEl.setAttribute('src', student.image);
 
 		const options = getOptions(correctId);
-
-		if (round === rounds) { // show different message in button if last round
-			btnNextEl.innerText = 'See result';
-		}
 
 		optionsEl.innerHTML = '';
 		options.forEach(id => {
@@ -86,13 +83,18 @@ const playGuessMate = () => {
 
 			btnNextEl.disabled = false;
 		}, {once: true });
+
+		if (round === rounds) { // show different message in button if last round
+			btnNextEl.innerText = 'See result';
+		}
 	}
 
 	btnNextEl.addEventListener('click', () => {
 		if (round !== rounds) {
 			playRound(studentsPlay[round]);
 		} else {
-			optionsEl.innerHTML = `<span>${score}</span>`;
+			optionsEl.classList.add('card', 'card-body', 'bg-dark');
+			optionsEl.innerHTML = `<div>Your score: ${score}</div>`;
 			btnNextEl.innerText = "Play again";
 			btnNextEl.addEventListener('click', () => {
 				playGuessMate();
