@@ -5,6 +5,9 @@ const optionsEl = document.querySelector('#options');
 const btnNextEl = document.querySelector('#btn-next');
 
 const roundsEl = document.querySelector('#rounds');
+const roundEl = document.querySelector('#round')
+
+
 
 const getRandomNumber = max => {
 	return Math.ceil( Math.random() * max );
@@ -41,7 +44,6 @@ const playGuessMate = () => {
 	const rounds = 3;
 	let round = 0;
 	let score = 0;
-	// let correctIds = [];
 
 	roundsEl.innerText = rounds;
 
@@ -50,50 +52,42 @@ const playGuessMate = () => {
 	const playRound = student => {
 		round++;
 		btnNextEl.disabled = true;
+		roundEl.innerText = round;
+
 		const correctId = student.id;
 		const correctName = student.name;
 
 		imgEl.setAttribute('src', student.image);
 
 		const options = getOptions(correctId);
-		console.log(round, rounds);
 
-		if (round === rounds) { // last round: show different message in button
+		if (round === rounds) { // show different message in button if last round
 			btnNextEl.innerText = 'See result';
 		}
 
-		document.querySelector('#round').innerText = round;
-
 		optionsEl.innerHTML = '';
-
 		options.forEach(id => {
 			optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
 		});
 
 		optionsEl.addEventListener('click', e => {
-			// console.log(correctIds);
-			// if (!correctIds.includes(correctId)) {
-				document.querySelectorAll('.option').forEach(option => {
-					option.disabled = true;
-				});
-				// const answer = Number(e.target.dataset.studentId);
-				const answer = e.target.innerText;
-				console.log("Correct id:", correctId);
-				console.log("Correct name:", correctName);
-				console.log("Registered answer:", answer);
+			document.querySelectorAll('.option').forEach(option => {
+				option.disabled = true;
+			});
 
-				e.target.classList.remove('btn-warning');
-				if (answer === correctName) {
-					console.log('correct');
-					e.target.classList.add('btn-success');
-					score++;
-				} else {
-					console.log('incorrect');
-					e.target.classList.add('btn-danger');
-				}
-				// correctIds.push(correctId);
-				btnNextEl.disabled = false;
-			// }
+			const answer = Number(e.target.dataset.studentId);
+			console.log("Correct id:", correctId);
+			console.log("Registered answer:", answer);
+
+			e.target.classList.remove('btn-warning');
+			if (answer === correctId) {
+				e.target.classList.add('btn-success');
+				score++;
+				console.log("New score:", score);
+			} else {
+				e.target.classList.add('btn-danger');
+			}
+			btnNextEl.disabled = false;
 		}, {once: true });
 	}
 
@@ -105,7 +99,7 @@ const playGuessMate = () => {
 			btnNextEl.innerText = 'Play again';
 			btnNextEl.addEventListener('click', () => {
 				playGuessMate();
-			});
+			}, { once: true });
 		}
 	});
 
