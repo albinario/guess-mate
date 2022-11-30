@@ -33,11 +33,11 @@ const getOptions = id => {
 	return options;
 }
 
-const showEl = el => el.classList.remove('hide');
-const hideEl = el => el.classList.add('hide');
-
 // pass a student id, return name of student, as a string
 const getName = id => students.find(student => student.id === id).name;
+
+const showEl = el => el.classList.remove('hide');
+const hideEl = el => el.classList.add('hide');
 
 const rounds = 3;
 let round = 0;
@@ -84,8 +84,7 @@ const playRound = student => {
 
 			btnNextEl.disabled = false;
 		}
-		
-	});
+	}, { once: true });
 
 	if (round === rounds) { // show different message in button if last round
 		btnNextEl.innerText = 'See result';
