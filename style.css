@@ -42,7 +42,7 @@ img {
 }
 
 @media (min-width: 768px) {
-	main {
+	#content {
 		display: flex;
 		justify-content: center;
 		gap: 2em;
