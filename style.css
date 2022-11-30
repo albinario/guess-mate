@@ -4,13 +4,16 @@ body > * {
 
 header {
 	display: flex;
+	flex-direction: column;
 	justify-content: space-between;
 	align-items: center;
+	margin: 1em 0;
 }
 
 img {
 	display: block;
-	max-width: 500px;
+	/* max-width: 500px; */
+	object-fit: contain;
 	border: 5.5px solid #f6c344;
 }
 
@@ -21,17 +24,41 @@ img {
 #options {
 	display: flex;
 	flex-wrap: wrap;
-	justify-content: space-evenly;
+	/* justify-content: space-between; */
 	gap: 1em;
 }
 
-#options .option {
-	flex-basis: 48%;
+.option {
 	padding: 3em;
+	flex-basis: 48%;
 }
 
 .card-body {
 	font-size: 2em;
-	text-align: center;
-	border: 5.5px solid #f6c344;
+	text-align: right;
+	border-color: #f6c344;
+}
+
+@media (max-width: 423px) {
+	.btn {
+		min-width: 100%;
+	}
+}
+
+@media (min-width: 768px) {
+	main {
+		display: flex;
+		justify-content: center;
+		gap: 2em;
+	}
+
+	.btn {
+		min-width: 100%;
+	}
+}
+
+@media (min-width: 1200px) {
+	.container {
+		padding: 0 10em;
+	}
 }
