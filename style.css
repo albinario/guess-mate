@@ -1,5 +1,6 @@
 body > * {
 	box-sizing: border-box;
+	text-align: center;
 }
 
 header {
@@ -12,9 +13,11 @@ header {
 
 img {
 	display: block;
-	/* max-width: 500px; */
 	object-fit: contain;
-	border: 5.5px solid #f6c344;
+}
+
+#img-mate {
+	border: 1px solid #f6c344;
 }
 
 .hide {
@@ -24,24 +27,17 @@ img {
 #options {
 	display: flex;
 	flex-wrap: wrap;
-	/* justify-content: space-between; */
 	gap: 1em;
 }
 
 .option {
-	padding: 3em;
+	height: 100px;
 	flex-basis: 48%;
 }
 
-.card-body {
-	font-size: 2em;
-	text-align: right;
-	border-color: #f6c344;
-}
-
 @media (max-width: 423px) {
-	.btn {
-		min-width: 100%;
+	.option {
+		flex-basis: 47%;
 	}
 }
 

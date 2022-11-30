@@ -1,6 +1,7 @@
+const mainEl = document.querySelector('main');
 const imgEl = document.querySelector('#img-mate');
 const optionsEl = document.querySelector('#options');
-const resultsEl = document.querySelector('#results');
+// const resultsEl = document.querySelector('#results');
 const btnNextEl = document.querySelector('#btn-next');
 
 const roundCounterEl = document.querySelector('#round-counter');
@@ -39,9 +40,11 @@ const getName = id => students.find(student => student.id === id).name;
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const rounds = 3;
+const rounds = 2;
 let round = 0;
 let score = 0;
+const highScores = [];
+const fails = [];
 
 roundsEl.innerText = rounds;
 btnNextEl.innerText = "Next mate";
@@ -79,6 +82,7 @@ const playRound = student => {
 				score++;
 			} else {
 				e.target.classList.add('btn-danger');
+				fails.push(student);
 			}
 			// console.log("Score:", score);
 
@@ -98,11 +102,33 @@ btnNextEl.addEventListener('click', () => {
 		hideEl(roundCounterEl);
 		hideEl(imgEl);
 		optionsEl.innerText = '';
-		showEl(resultsEl);
-		resultsEl.innerHTML = `
-			<div>Max score <span class="badge text-bg-primary">${rounds}</span></div>
-			<div>Your score <span class="badge text-bg-${(score > rounds/2) ? 'success' : 'danger'}">${score}</span></div>
+		mainEl.innerHTML = `
+			<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
+				<div>Your score <span class="badge text-bg-${(score > rounds/2) ? 'success' : 'danger'}">${score}</span></div>
+				<div>Max score <span class="badge text-bg-primary">${rounds}</span></div>
+				<div class="mt-2">Highscore 💥<ol id="high-score"></ol></div>
+			</div>
+			<div class="col-xs-12 col-sm-12 card card-body bg-dark">You need to grab a 🍺 with:
+				<div id="fails" class="row"></div>
+			</div>
 		`;
+		if (highScores.length) {
+			highScores.forEach(highScore => {
+				document.querySelector('#high-score').innerHTML += ``;
+			})
+		}
+		if (fails.length) {
+			fails.forEach(fail => {
+				document.querySelector('#fails').innerHTML += `
+					<div class="col-6">
+						<img src="${fail.image}" class="img-fluid rounded p-2 m-1" alt="${fail.name}">
+						<p class="small">${fail.name}</p>
+					</div>
+				`;
+			});
+		} else {
+			document.querySelector('#fails').innerHTML = '<div>No one, you probably already had 🍻 with all.</div>'
+		}
 		btnNextEl.classList.add('hide');
 	}
 });
