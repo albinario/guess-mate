@@ -40,7 +40,7 @@ const getName = id => students.find(student => student.id === id).name;
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const highScores = [{score: 5, dt: '23:45:32'}, {score: 1, dt: '12:00:54'}]; // TBD
+const highScores = [{score: 5, dt: '23:45:32'}, {score: 1, dt: '12:00:54'}]; // two mock ghosts who played before
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
 levels.forEach(level => {
@@ -49,6 +49,7 @@ levels.forEach(level => {
 levelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
 		levelEl.setAttribute('style', 'display: none;');
+		showEl(roundCounterEl);
 		showEl(imgEl);
 		playGame(Number(e.target.innerText));
 	}
@@ -145,7 +146,7 @@ const playGame = level => {
 					`;
 				});
 			} else {
-				document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, you probably already had 🍻 with all.</em></p>'
+				document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
 			}
 		} else if (btnNextEl.innerText === "Play again") { // TBD - game should restart
 			// contentEl.innerHTML = '';
