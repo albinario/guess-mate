@@ -1,9 +1,9 @@
-const studentsPlay = [...students];
-
 const imgEl = document.querySelector('#img-mate');
 const optionsEl = document.querySelector('#options');
+const resultsEl = document.querySelector('#results');
 const btnNextEl = document.querySelector('#btn-next');
 
+const roundCounterEl = document.querySelector('#round-counter');
 const roundsEl = document.querySelector('#rounds');
 const roundEl = document.querySelector('#round')
 
@@ -24,7 +24,7 @@ const shuffleArray = array => {
 const getOptions = id => {
 	let options = [id]; 
 	while (options.length < 4) {
-		let anotherId = getRandomNumber(studentsPlay.length);
+		let anotherId = getRandomNumber(students.length);
 		if (!options.includes(anotherId)) {
 			options.push(anotherId);
 		}
@@ -33,45 +33,46 @@ const getOptions = id => {
 	return options;
 }
 
+const showEl = el => el.classList.remove('hide');
+const hideEl = el => el.classList.add('hide');
+
 // pass a student id, return name of student, as a string
-const getName = id => studentsPlay.find(student => student.id === id).name;
+const getName = id => students.find(student => student.id === id).name;
 
-const playGuessMate = () => {
-	const rounds = 3;
-	let round = 0;
-	let score = 0;
+const rounds = 3;
+let round = 0;
+let score = 0;
 
-	roundsEl.innerText = rounds;
-	btnNextEl.innerText = "Next mate";
+roundsEl.innerText = rounds;
+btnNextEl.innerText = "Next mate";
 
-	shuffleArray(studentsPlay);
+shuffleArray(students);
 
-	const playRound = student => {
-		round++;
-		console.log(round);
-		btnNextEl.disabled = true;
-		roundEl.innerText = round;
+const playRound = student => {
+	round++;
+	btnNextEl.disabled = true;
+	roundEl.innerText = round;
 
-		const correctId = student.id;
+	const correctId = student.id;
 
-		imgEl.setAttribute('src', student.image);
+	imgEl.setAttribute('src', student.image);
 
-		const options = getOptions(correctId);
+	const options = getOptions(correctId);
 
-		optionsEl.innerHTML = '';
-		options.forEach(id => {
-			optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
-		});
+	optionsEl.innerHTML = '';
+	options.forEach(id => {
+		optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
+	});
 
-		optionsEl.addEventListener('click', e => {
+	optionsEl.addEventListener('click', e => {
+		if (e.target.tagName === "BUTTON") {
 			document.querySelectorAll('.option').forEach(option => {
 				option.disabled = true;
 			});
 
 			const answer = Number(e.target.dataset.studentId);
-			console.log("Correct id:", correctId);
-			console.log("Registered answer:", answer);
-
+			// console.log("Correct id:", correctId);
+			// console.log("Registered answer:", answer);
 			e.target.classList.remove('btn-warning');
 			if (answer === correctId) {
 				e.target.classList.add('btn-success');
@@ -79,31 +80,32 @@ const playGuessMate = () => {
 			} else {
 				e.target.classList.add('btn-danger');
 			}
-			console.log("Score:", score);
+			// console.log("Score:", score);
 
 			btnNextEl.disabled = false;
-		}, {once: true });
-
-		if (round === rounds) { // show different message in button if last round
-			btnNextEl.innerText = 'See result';
 		}
-	}
-
-	btnNextEl.addEventListener('click', () => {
-		if (round !== rounds) {
-			playRound(studentsPlay[round]);
-		} else {
-			optionsEl.classList.add('card', 'card-body', 'bg-dark');
-			optionsEl.innerHTML = `<div>Your score: ${score}</div>`;
-			btnNextEl.innerText = "Play again";
-			btnNextEl.addEventListener('click', () => {
-				playGuessMate();
-			}, { once: true });
-		}
+		
 	});
 
-	playRound(studentsPlay[round]);
-
+	if (round === rounds) { // show different message in button if last round
+		btnNextEl.innerText = 'See result';
+	}
 }
 
-playGuessMate();
+btnNextEl.addEventListener('click', () => {
+	if (round !== rounds) {
+		playRound(students[round]);
+	} else {
+		hideEl(roundCounterEl);
+		hideEl(imgEl);
+		optionsEl.innerText = '';
+		showEl(resultsEl);
+		resultsEl.innerHTML = `
+			<div>Max score <span class="badge text-bg-primary">${rounds}</span></div>
+			<div>Your score <span class="badge text-bg-${(score > rounds/2) ? 'success' : 'danger'}">${score}</span></div>
+		`;
+		btnNextEl.classList.add('hide');
+	}
+});
+
+playRound(students[round]);

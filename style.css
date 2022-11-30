@@ -2,7 +2,7 @@ body > * {
 	box-sizing: border-box;
 }
 
-#top {
+header {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -12,6 +12,10 @@ img {
 	display: block;
 	max-width: 500px;
 	border: 5.5px solid #f6c344;
+}
+
+.hide {
+	display: none;
 }
 
 #options {
@@ -27,5 +31,7 @@ img {
 }
 
 .card-body {
-	border: 1px solid #f6c344;
+	font-size: 2em;
+	text-align: center;
+	border: 5.5px solid #f6c344;
 }
