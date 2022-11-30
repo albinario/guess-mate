@@ -59,7 +59,9 @@ const playGame = () => {
 
 		const correctId = student.id;
 
+		imgEl.classList.remove('hide');
 		imgEl.setAttribute('src', student.image);
+		// contentEl.innerHTML = '<img src="albin_lindeborg.jpg" id="img-mate" class="img-fluid rounded mx-auto mb-3" alt="Who is this mate?">';
 		optionsEl.innerHTML = '';
 
 		getOptions(correctId).forEach(id => {
@@ -100,14 +102,17 @@ const playGame = () => {
 			hideEl(roundCounterEl);
 			hideEl(imgEl);
 			optionsEl.innerText = '';
-			btnNextEl.innerText = "Play again";
+			btnNextEl.innerText = "Play again (coming soon...)";
 			contentEl.innerHTML += `
 				<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
 					<div>Your score <span class="badge text-bg-${(score > rounds/2) ? 'success' : 'danger'}">${score}</span></div>
 					<div>Max score <span class="badge text-bg-primary">${rounds}</span></div>
-					<div class="mt-3">Highscore 💥<ol id="high-score"></ol></div>
+					<div class="mt-3">💥 ⇩ Highscore ⇩ 💥
+						<p class="small">coming soon...</p>
+						<ol id="high-score"></ol>
+					</div>
 				</div>
-				<div class="col-xs-12 col-sm-12 card card-body bg-dark">You need to grab a 🍺 with:
+				<div class="col-xs-12 col-sm-12 card card-body bg-dark">You need to have a 🍺 with:
 					<div id="fails" class="row"></div>
 				</div>
 			`;
@@ -128,13 +133,14 @@ const playGame = () => {
 			} else {
 				document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, you probably already had 🍻 with all.</em></p>'
 			}
-		} else if (btnNextEl.innerText === "Play again") {
-			contentEl.innerHTML = '';
-			showEl(roundCounterEl);
-			showEl(imgEl);
-			playGame();
+		} else if (btnNextEl.innerText === "Play again") { // TBD
+			// contentEl.innerHTML = '';
+			// showEl(roundCounterEl);
+			// showEl(imgEl);
+			// playGame();
 		} else {
-			console.error("Invalid value in btnNextEl.innerText");
+			btnNextEl.innerText = "Sorry, not yet developed";
+			btnNextEl.disabled = true;
 		}
 	});
 
