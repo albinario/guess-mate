@@ -4,7 +4,7 @@
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Guess Mate</title>
+	<title>guess mate</title>
 
 	<!-- Bootstrap 5.2 -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
@@ -16,13 +16,17 @@
 
 	<div id="app" class="container">
 		<header>
-			<h1>Guess Mate</h1>
+			<h1>guess mate</h1>
 			<div id="round-counter">Round <span id="round"></span> of <span id="rounds"></span></div>
 		</header>
-		<img src="albin_lindeborg.jpg" id="img-mate" class="img-fluid rounded mx-auto mb-3" alt="Who is this mate?">
-		<div id="options"></div>
-		<div id="results" class="hide card card-body bg-dark hide"></div>
-		<button id="btn-next" class="btn btn-success w-100 mt-3" disabled></button>
+		<main>
+			<img src="albin_lindeborg.jpg" id="img-mate" class="img-fluid rounded mx-auto mb-3" alt="Who is this mate?">
+			<div class="content">
+				<div id="options"></div>
+				<div id="results" class="card card-body bg-dark text-right hide"></div>
+				<button id="btn-next" class="btn btn-success w-100 mt-3" disabled></button>
+			</div>
+		</main>
 	</div>
 
 	<script src="students.js"></script>
