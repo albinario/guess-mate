@@ -11,6 +11,12 @@ header {
 	margin: 1em 0;
 }
 
+#level {
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+}
+
 img {
 	display: block;
 	object-fit: contain;
@@ -35,6 +41,10 @@ img {
 	flex-basis: 48%;
 }
 
+#high-score {
+	padding: 0 5em;
+}
+
 @media (max-width: 423px) {
 	.option {
 		flex-basis: 47%;
@@ -48,7 +58,7 @@ img {
 		gap: 2em;
 	}
 
-	.btn {
+	.option {
 		min-width: 100%;
 	}
 }
