@@ -3,18 +3,14 @@ body > * {
 	text-align: center;
 }
 
-header {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	align-items: center;
-	margin: 1em 0;
-}
-
 #level {
 	display: flex;
 	justify-content: space-evenly;
 	align-items: center;
+}
+
+.progress {
+	background-color: rgba(200, 200, 200, 0.3);
 }
 
 img {
@@ -66,6 +62,10 @@ ol {
 
 	.option {
 		min-width: 100%;
+	}
+
+	#level .btn {
+		padding: 1em 2em;
 	}
 }
 
