@@ -38,7 +38,7 @@ const getName = id => students.find(student => student.id === id).name;
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const highScores = [{score: 5, dt: '23:45:32'}, {score: 1, dt: '12:00:54'}]; // two mock ghosts who played before
+const highScores = [{score: 5, time: '23:45:32'}, {score: 1, time: '12:00:54'}]; // two mock ghosts who played before
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
 levels.forEach(level => {
