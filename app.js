@@ -81,9 +81,7 @@ const playGame = level => {
 
 		optionsEl.addEventListener('click', e => {
 			if (e.target.tagName === "BUTTON") {
-				document.querySelectorAll('.option').forEach(option => {
-					option.disabled = true;
-				});
+				document.querySelectorAll('.option').forEach(option => option.disabled = true);
 
 				const answer = Number(e.target.dataset.studentId);
 				// console.log("Correct id:", correctId);
@@ -113,7 +111,7 @@ const playGame = level => {
 			hideEl(roundCounterEl);
 			hideEl(imgEl);
 			optionsEl.innerText = '';
-			btnNextEl.innerText = "Play again (coming soon...)";
+
 			contentEl.innerHTML += `
 				<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
 					<div>Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></div>
@@ -126,16 +124,21 @@ const playGame = level => {
 					<div id="fails" class="row"></div>
 				</div>
 			`;
-			const now = new Date().toLocaleTimeString('se-SE');
+			btnNextEl.innerText = "Play again (coming soon...)";
+
+			const now = new Date().toLocaleTimeString();
 			highScores.push({score: score, dt: now});
 			if (highScores.length) {
 				highScores.sort((a, b) => b.score - a.score);
-				for (i = 0; i < 3; i++) {
+				for (i = 0; i < 10; i++) {
 					if (highScores[i]) {
 						document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(highScores[i].score > level/2) ? 'success' : 'danger'}">${highScores[i].score}</span> <span class="small">${highScores[i].dt}</span></li>`;
+					} else {
+						return;
 					}
 				}
 			}
+
 			if (fails.length) {
 				fails.forEach(fail => {
 					document.querySelector('#fails').innerHTML += `
