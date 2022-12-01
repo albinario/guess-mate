@@ -87,7 +87,6 @@ const playGame = level => {
 				} else {
 					e.target.classList.add('btn-danger');
 					fails.push(student);
-					console.log(fails);
 				}
 
 				btnNextEl.disabled = false;
@@ -105,7 +104,7 @@ const playGame = level => {
 		} else if (btnNextEl.innerText === "See result") { // game is over
 			progressBarEl.setAttribute('style', 'width: 100%');
 			progressBarEl.classList.remove('progress-bar-animated');
-			
+
 			hideEl(imgEl);
 			optionsEl.innerText = '';
 
