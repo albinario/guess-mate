@@ -4,7 +4,15 @@ const progressBarEl = document.querySelector('.progress-bar');
 const imgEl = document.querySelector('#img-mate');
 const contentEl = document.querySelector('#content');
 const optionsEl = document.querySelector('#options');
+const resultsEl = document.querySelector('#results');
 const btnNextEl = document.querySelector('#btn-next');
+
+let level = 0;
+let round = 0;
+let correctStudent = null;
+let score = 0;	
+let fails = [];
+const highScore = [];
 
 const getRandomNumber = max => {
 	return Math.ceil( Math.random() * max );
@@ -19,8 +27,7 @@ const shuffleArray = array => {
 	}
 }
 
-// Pass a student id, return same id shuffled along with three other unique id's, as an array
-const getOptions = id => {
+const getOptions = id => { // pass a student id, return same id shuffled along with three other unique id's, as an array
 	let options = [id]; 
 	while (options.length < 4) {
 		let randomId = getRandomNumber(students.length);
@@ -32,13 +39,10 @@ const getOptions = id => {
 	return options;
 }
 
-// pass a student id, return name of student, as a string
-const getName = id => students.find(student => student.id === id).name;
+const getName = id => students.find(student => student.id === id).name; // pass a student id, return name of student, as a string
 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
-
-const highScores = [{score: 5, time: '23:45:32'}, {score: 1, time: '12:00:54'}]; // two mock ghosts who played before
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
 levels.forEach(level => {
@@ -47,114 +51,121 @@ levels.forEach(level => {
 levelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
 		levelEl.setAttribute('style', 'display: none;');
+		level = Number(e.target.innerText);
+
+		highScore.push({score: Math.round(level/2), time: '12:00:00'}); // mock ghost player 1, scored half points after half a day
+		highScore.push({score: getRandomNumber(level), time: `${getRandomNumber(23)}:${getRandomNumber(59)}:${getRandomNumber(59)}`}); // mock ghost player 2, scored random points at random time of the day
+
 		showEl(progressEl);
 		showEl(imgEl);
-		playGame(Number(e.target.innerText));
+		playGame(level);
 	}
 })
 
-const playGame = level => {
-	let round = 0;
-	let score = 0;	
-	const fails = [];
+const resetGame = () => {
+	round = 0; 
+	score = 0; 
+	fails = [];
+	correctStudent = null;
+}
 
-	btnNextEl.innerText = "Next mate";
+const optionsEventListener = e => {
+	if (e.target.tagName === "BUTTON") {
+		document.querySelectorAll('.option').forEach(option => option.disabled = true);
 
-	shuffleArray(students);
-
-	const playRound = student => {
+		const answer = Number(e.target.dataset.studentId);
+		e.target.classList.remove('btn-warning');
+		if (answer === correctStudent.id) {
+			e.target.classList.add('btn-success');
+			score++;
+		} else {
+			e.target.classList.add('btn-danger');
+			fails.push(correctStudent);
+		}
 		progressBarEl.setAttribute('style', `width: ${(round / level) * 100}%`);
+		btnNextEl.disabled = false;
+	}
+}
+
+const btnNextEventListener = () => {
+	if (btnNextEl.innerText === "Next mate") { // game is still on
+		playRound(students[round], level);
+
+	} else if (btnNextEl.innerText === "See result") { // game is over
+		progressBarEl.setAttribute('style', 'width: 100%');
+		progressBarEl.classList.remove('progress-bar-animated');
+
+		hideEl(imgEl);
+		hideEl(contentEl);
+		optionsEl.innerText = '';
+
+		resultsEl.innerHTML += `
+			<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
+				<div>Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></div>
+				<div class="small">Max score <span class="badge text-bg-primary">${level}</span></div>
+				<div class="mt-3">💥 ⇩ Highscore ⇩ 💥
+					<ol id="high-score"></ol>
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-12 card card-body bg-dark">You need to have a 🍺 with:
+				<div id="fails" class="row"></div>
+			</div>
+		`;
+
+		highScore.push({score: score, time: new Date().toLocaleTimeString()});
+		highScore.sort((a, b) => b.score - a.score);
+		highScore.slice(0, 10).forEach(score => {
+			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(score.score > level/2) ? 'success' : 'danger'}">${score.score}</span> <span class="small">${score.time}</span></li>`;
+		})
+
+		if (fails.length) {
+			fails.forEach(fail => {
+				document.querySelector('#fails').innerHTML += `
+					<div class="col-6">
+						<img src="${fail.image}" class="img-fluid rounded mt-2 mb-1" alt="${fail.name}">
+						<p class="small">${fail.name}</p>
+					</div>
+				`;
+			});
+		} else {
+			document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
+		}
+
+		btnNextEl.innerText = "Play again";
+		
+	} else if (btnNextEl.innerText === "Play again") {
+		resetGame();
+		progressBarEl.setAttribute('style', `width: 0%`);
+		resultsEl.innerText = '';
+		showEl(imgEl);
+		playGame(level);
+	} else { // fallback
+		btnNextEl.innerText = "Apologies, requested action is not yet developed 🤷🏻‍♂️";
+		btnNextEl.disabled = true;
+		console.error("Something went wrong with btn-next");
+	}
+}
+
+const playRound = (student, level) => {		
 		round++;
 		btnNextEl.disabled = true;
-
-		const correctId = student.id;
+		correctStudent = student;
 		imgEl.setAttribute('src', student.image);
-		
 		optionsEl.innerHTML = '';
-		getOptions(correctId).forEach(id => {
+		getOptions(correctStudent.id).forEach(id => {
 			optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
 		});
 
-		optionsEl.addEventListener('click', e => {
-			if (e.target.tagName === "BUTTON") {
-				document.querySelectorAll('.option').forEach(option => option.disabled = true);
-
-				const answer = Number(e.target.dataset.studentId);
-				e.target.classList.remove('btn-warning');
-				if (answer === correctId) {
-					e.target.classList.add('btn-success');
-					score++;
-				} else {
-					e.target.classList.add('btn-danger');
-					fails.push(student);
-				}
-
-				btnNextEl.disabled = false;
-			}
-		}, { once: true });
+		optionsEl.addEventListener('click', optionsEventListener);
 
 		if (round === level) { // show different message in btn-next if last round
 			btnNextEl.innerText = "See result";
 		}
 	}
 
-	btnNextEl.addEventListener('click', e => {
-		if (btnNextEl.innerText === "Next mate") { // game is still on
-			playRound(students[round]);
-		} else if (btnNextEl.innerText === "See result") { // game is over
-			progressBarEl.setAttribute('style', 'width: 100%');
-			progressBarEl.classList.remove('progress-bar-animated');
-
-			hideEl(imgEl);
-			optionsEl.innerText = '';
-
-			contentEl.innerHTML += `
-				<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
-					<div>Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></div>
-					<div class="small">Max score <span class="badge text-bg-primary">${level}</span></div>
-					<div class="mt-3">💥 ⇩ Highscore ⇩ 💥
-						<ol id="high-score"></ol>
-					</div>
-				</div>
-				<div class="col-xs-12 col-sm-12 card card-body bg-dark">You need to have a 🍺 with:
-					<div id="fails" class="row"></div>
-				</div>
-			`;
-			btnNextEl.innerText = "Play again (coming soon...)";
-
-			highScores.push({score: score, time: new Date().toLocaleTimeString()});
-			if (highScores.length) {
-				highScores.sort((a, b) => b.score - a.score);
-				for (i = 0; i < 10; i++) { // only show top 10
-					if (highScores[i]) {
-						document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(highScores[i].score > level/2) ? 'success' : 'danger'}">${highScores[i].score}</span> <span class="small">${highScores[i].time}</span></li>`;
-					}
-				}
-			}
-
-			if (fails.length) {
-				console.log('yes');
-				fails.forEach(fail => {
-					document.querySelector('#fails').innerHTML += `
-						<div class="col-6">
-							<img src="${fail.image}" class="img-fluid rounded p-2 m-1" alt="${fail.name}">
-							<p class="small">${fail.name}</p>
-						</div>
-					`;
-				});
-			} else {
-				document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
-			}
-		} else if (btnNextEl.innerText === "Play again") { // TBD - game should restart
-			// contentEl.innerHTML = '';
-			// showEl(roundCounterEl);
-			// showEl(imgEl);
-			// playGame();
-		} else { // fallback
-			btnNextEl.innerText = "Apologies, requested action is not yet developed";
-			btnNextEl.disabled = true;
-		}
-	});
-
-	playRound(students[round]);
+const playGame = level => {
+	btnNextEl.innerText = "Next mate";
+	shuffleArray(students);
+	btnNextEl.addEventListener('click', btnNextEventListener)
+	playRound(students[round], level);
 }

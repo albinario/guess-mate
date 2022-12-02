@@ -54,7 +54,7 @@ ol {
 }
 
 @media (min-width: 768px) {
-	#content {
+	#content, #results {
 		display: flex;
 		justify-content: center;
 		gap: 2em;
