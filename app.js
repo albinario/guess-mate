@@ -6,6 +6,12 @@ const contentEl = document.querySelector('#content');
 const optionsEl = document.querySelector('#options');
 const btnNextEl = document.querySelector('#btn-next');
 
+
+let round = 0;
+let score = 0;	
+const fails = [];
+let correctStudent = null;
+
 const getRandomNumber = max => {
 	return Math.ceil( Math.random() * max );
 }
@@ -53,45 +59,60 @@ levelEl.addEventListener('click', e => {
 	}
 })
 
-const playGame = level => {
-	let round = 0;
-	let score = 0;	
-	const fails = [];
 
+const resetGame = () => {
+	round = 0; 
+	score = 0; 
+	fails = [];
+	currentAnswer = null;
+}
+
+// extracted correctstudent as global variable and implemented the event listener once. 
+// I would change so that the event listener would exist on the button element instead. But this works :) 
+function optionsEventListener(e) {
+	if (e.target.tagName === "BUTTON") {
+		document.querySelectorAll('.option').forEach(option => option.disabled = true);
+
+		const answer = Number(e.target.dataset.studentId);
+		e.target.classList.remove('btn-warning');
+		if (answer === correctStudent.id) {
+			e.target.classList.add('btn-success');
+			score++;
+		} else {
+			e.target.classList.add('btn-danger');
+			fails.push(correctStudent);
+		}
+
+		btnNextEl.disabled = false;
+	}
+}
+
+const playGame = level => {
 	btnNextEl.innerText = "Next mate";
 
 	shuffleArray(students);
 
+	
+
 	const playRound = student => {
+
 		progressBarEl.setAttribute('style', `width: ${(round / level) * 100}%`);
 		round++;
 		btnNextEl.disabled = true;
-
-		const correctId = student.id;
+		correctStudent = student
 		imgEl.setAttribute('src', student.image);
-		
 		optionsEl.innerHTML = '';
-		getOptions(correctId).forEach(id => {
+		getOptions(correctStudent.id).forEach(id => {
 			optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
 		});
 
-		optionsEl.addEventListener('click', e => {
-			if (e.target.tagName === "BUTTON") {
-				document.querySelectorAll('.option').forEach(option => option.disabled = true);
+		// Before a new handler was created everytime playround ran. So if you would run optionsEl.removeEventListener, the event listener would not be the same. 
+		// The reference lives on because of this. And when div#options is clicked, the old eventhandler will also be fired. 
+		// When you had "once" only one of those "click" events was run, but the others still is there. 
+		// if you would implement the optionsEventListener below here, the result would be the same, since it would not be the same handler as previous iterations of playRound function. 
+	
 
-				const answer = Number(e.target.dataset.studentId);
-				e.target.classList.remove('btn-warning');
-				if (answer === correctId) {
-					e.target.classList.add('btn-success');
-					score++;
-				} else {
-					e.target.classList.add('btn-danger');
-					fails.push(student);
-				}
-
-				btnNextEl.disabled = false;
-			}
-		}, { once: true });
+		optionsEl.addEventListener('click', optionsEventListener);
 
 		if (round === level) { // show different message in btn-next if last round
 			btnNextEl.innerText = "See result";
@@ -146,6 +167,7 @@ const playGame = level => {
 				document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
 			}
 		} else if (btnNextEl.innerText === "Play again") { // TBD - game should restart
+			resetGame();
 			// contentEl.innerHTML = '';
 			// showEl(roundCounterEl);
 			// showEl(imgEl);
