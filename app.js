@@ -44,6 +44,11 @@ const getName = id => students.find(student => student.id === id).name; // pass 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
+const clockify = num => { // pass a number, return a number suited for a clock, as a string (8 => "08", 23 => "23")
+	const str = "0"+getRandomNumber(num);
+	return str.slice(-2);
+}
+
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
 levels.forEach(level => {
 	levelEl.innerHTML += `<button class="btn btn-sm btn-primary my-3">${level}</button>`;
@@ -53,8 +58,12 @@ levelEl.addEventListener('click', e => {
 		levelEl.setAttribute('style', 'display: none;');
 		level = Number(e.target.innerText);
 
-		highScore.push({score: Math.round(level/2), time: '12:00:00'}); // mock ghost player 1, scored half points after half a day
-		highScore.push({score: getRandomNumber(level), time: `${getRandomNumber(23)}:${getRandomNumber(59)}:${getRandomNumber(59)}`}); // mock ghost player 2, scored random points at random time of the day
+		// add some mock ghost players that have scored random points at random times of the day
+		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
+		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
+		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
+		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
+		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
 
 		showEl(progressEl);
 		showEl(imgEl);
@@ -101,9 +110,9 @@ const btnNextEventListener = () => {
 
 		resultsEl.innerHTML += `
 			<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
-				<div>Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></div>
-				<div class="small">Max score <span class="badge text-bg-primary">${level}</span></div>
-				<div class="mt-3">💥 ⇩ Highscore ⇩ 💥
+				<p class="fs-1">Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></p>
+				<p class="fs-3">Max score <span class="badge text-bg-primary">${level}</span></p>
+				<div class="mt-3 m-auto">💥 ⇩ Highscore ⇩ 💥
 					<ol id="high-score"></ol>
 				</div>
 			</div>
@@ -112,10 +121,11 @@ const btnNextEventListener = () => {
 			</div>
 		`;
 
-		highScore.push({score: score, time: new Date().toLocaleTimeString()});
+		const now = new Date().toLocaleTimeString();
+		highScore.push({score: score, time: now});
 		highScore.sort((a, b) => b.score - a.score);
 		highScore.slice(0, 10).forEach(score => {
-			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(score.score > level/2) ? 'success' : 'danger'}">${score.score}</span> <span class="small">${score.time}</span></li>`;
+			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(score.score > level/2) ? 'success' : 'danger'}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`;
 		})
 
 		if (fails.length) {
@@ -132,7 +142,7 @@ const btnNextEventListener = () => {
 		}
 
 		btnNextEl.innerText = "Play again";
-		
+
 	} else if (btnNextEl.innerText === "Play again") {
 		resetGame();
 		progressBarEl.setAttribute('style', `width: 0%`);
