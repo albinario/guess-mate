@@ -15,7 +15,7 @@ let fails = [];
 const highScore = [];
 
 const getRandomNumber = max => {
-	return Math.ceil( Math.random() * max );
+	return Math.ceil(Math.random() * max);
 }
 
 const shuffleArray = array => {
@@ -88,22 +88,20 @@ const resetGame = () => {
 	correctStudent = null;
 }
 
-const optionsEventListener = e => {
-	if (e.target.tagName === "BUTTON") {
-		document.querySelectorAll('.option').forEach(option => option.disabled = true);
+const optionEventListener = e => {
+	document.querySelectorAll('.option').forEach(option => option.disabled = true);
 
-		const answer = Number(e.target.dataset.studentId);
-		e.target.classList.remove('btn-warning');
-		if (answer === correctStudent.id) {
-			e.target.classList.add('btn-success');
-			score++;
-		} else {
-			e.target.classList.add('btn-danger');
-			fails.push(correctStudent);
-		}
-		progressBarEl.setAttribute('style', `width: ${(round / level) * 100}%`);
-		btnNextEl.disabled = false;
+	const answer = Number(e.target.dataset.studentId);
+	e.target.classList.remove('btn-warning');
+	if (answer === correctStudent.id) {
+		e.target.classList.add('btn-success');
+		score++;
+	} else {
+		e.target.classList.add('btn-danger');
+		fails.push(correctStudent);
 	}
+	progressBarEl.setAttribute('style', `width: ${(round / level) * 100}%`);
+	btnNextEl.disabled = false;	
 }
 
 const btnNextEventListener = () => {
@@ -149,7 +147,6 @@ const btnNextEventListener = () => {
 		} else {
 			document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
 		}
-
 		btnNextEl.innerText = "Play again";
 
 	} else if (btnNextEl.innerText === "Play again") {
@@ -167,21 +164,20 @@ const btnNextEventListener = () => {
 }
 
 const playRound = (student, level) => {
-		round++;
-		btnNextEl.disabled = true;
-		correctStudent = student;
-		imgEl.setAttribute('src', student.image);
-		optionsEl.innerHTML = '';
-		getOptions(correctStudent.id).forEach(id => {
-			optionsEl.innerHTML += `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`;
-		});
+	round++;
+	btnNextEl.disabled = true;
+	correctStudent = student;
+	imgEl.setAttribute('src', correctStudent.image);
+	optionsEl.innerHTML = getOptions(correctStudent.id).map(id => `<button class="option btn btn-warning" data-student-id="${id}">${getName(id)}</button>`).join('');
 
-		optionsEl.addEventListener('click', optionsEventListener);
+	document.querySelectorAll('.option').forEach(option => {
+		option.addEventListener('click', optionEventListener);
+	})
 
-		if (round === level) { // show different message in btn-next if last round
-			btnNextEl.innerText = "See result";
-		}
+	if (round === level) { // show different message in btn-next if last round
+		btnNextEl.innerText = "See result";
 	}
+}
 
 const playGame = level => {
 	btnNextEl.innerText = "Next mate";
