@@ -44,6 +44,16 @@ const getName = id => students.find(student => student.id === id).name; // pass 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
+const getScoreValue = (score, level) => {
+	if (score / level > 0.67) {
+		return 'success';
+	} else if (score / level < 0.33) {
+		return 'danger';
+	} else {
+		return 'warning';
+	}
+}
+
 const clockify = num => { // pass a number, return a number suited for a clock, as a string (8 => "08", 23 => "23")
 	const str = "0"+getRandomNumber(num);
 	return str.slice(-2);
@@ -110,7 +120,7 @@ const btnNextEventListener = () => {
 
 		resultsEl.innerHTML += `
 			<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
-				<p class="fs-1">Your score <span class="badge text-bg-${(score > level/2) ? 'success' : 'danger'}">${score}</span></p>
+				<p class="fs-1">Your score <span class="badge text-bg-${getScoreValue(score, level)}">${score}</span></p>
 				<p class="fs-3">Max score <span class="badge text-bg-primary">${level}</span></p>
 				<div class="mt-3 m-auto">💥 ⇩ Highscore ⇩ 💥
 					<ol id="high-score"></ol>
@@ -125,7 +135,7 @@ const btnNextEventListener = () => {
 		highScore.push({score: score, time: now});
 		highScore.sort((a, b) => b.score - a.score);
 		highScore.slice(0, 10).forEach(score => {
-			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${(score.score > level/2) ? 'success' : 'danger'}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`;
+			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${getScoreValue(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`;
 		})
 
 		if (fails.length) {
@@ -149,6 +159,7 @@ const btnNextEventListener = () => {
 		resultsEl.innerText = '';
 		showEl(imgEl);
 		playGame(level);
+
 	} else { // fallback
 		btnNextEl.innerText = "Apologies, requested action is not yet developed 🤷🏻‍♂️";
 		btnNextEl.disabled = true;
@@ -156,7 +167,7 @@ const btnNextEventListener = () => {
 	}
 }
 
-const playRound = (student, level) => {		
+const playRound = (student, level) => {
 		round++;
 		btnNextEl.disabled = true;
 		correctStudent = student;
