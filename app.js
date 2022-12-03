@@ -115,7 +115,6 @@ const btnNextEventListener = () => {
 		progressBarEl.classList.remove('progress-bar-animated');
 
 		hideEl(imgEl);
-		hideEl(contentEl);
 		optionsEl.innerText = '';
 
 		resultsEl.innerHTML += `
