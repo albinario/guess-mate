@@ -11,7 +11,7 @@ const btnNextEl = document.querySelector('#btn-next');
 let level = 0;
 let round = 0;
 let correctStudent = null;
-let score = 0;	
+let score = 0;
 let fails = [];
 const highScore = [];
 
@@ -29,7 +29,7 @@ const shuffleArray = array => {
 }
 
 const getOptions = id => { // pass a student id, return same id shuffled along with three other unique id's, as an array
-	let options = [id]; 
+	let options = [id];
 	while (options.length < 4) {
 		let randomId = getRandomNumber(students.length);
 		if (!options.includes(randomId)) {
@@ -82,8 +82,8 @@ btnLevelEl.addEventListener('click', e => {
 })
 
 const resetGame = () => {
-	round = 0; 
-	score = 0; 
+	round = 0;
+	score = 0;
 	fails = [];
 	correctStudent = null;
 }
