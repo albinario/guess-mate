@@ -45,7 +45,7 @@ const getName = id => students.find(student => student.id === id).name; // pass 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const getScoreValue = (score, level) => {
+const getScoreValue = (score, level) => { // pass score and level, return class color based on result, as a string
 	if (score / level > 0.67) {
 		return 'success';
 	} else if (score / level < 0.33) {
@@ -65,11 +65,10 @@ btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-prima
 
 btnLevelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
-		console.log(levelEl);
 		hideEl(levelEl);
 		level = Number(e.target.innerText);
 
-		// add some mock ghost players that have scored random points at random times of the day
+		// add some mock ghost players that have scored random points at random times of the day, to highscore
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
