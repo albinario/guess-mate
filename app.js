@@ -131,22 +131,10 @@ const btnNextEventListener = () => {
 		const now = new Date().toLocaleTimeString();
 		highScore.push({score: score, time: now});
 		highScore.sort((a, b) => b.score - a.score);
-		highScore.slice(0, 10).forEach(score => {
-			document.querySelector('#high-score').innerHTML += `<li class="ml-auto"><span class="badge text-bg-${getScoreValue(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`;
-		})
+		document.querySelector('#high-score').innerHTML = highScore.slice(0, 10).map(score => `<li class="ml-auto"><span class="badge text-bg-${getScoreValue(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`).join('');
 
-		if (fails.length) {
-			fails.forEach(fail => {
-				document.querySelector('#fails').innerHTML += `
-					<div class="col-6">
-						<img src="${fail.image}" class="img-fluid rounded mt-2 mb-1" alt="${fail.name}">
-						<p class="small">${fail.name}</p>
-					</div>
-				`;
-			});
-		} else {
-			document.querySelector('#fails').innerHTML = '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>'
-		}
+		document.querySelector('#fails').innerHTML = (fails.length) ? fails.map(fail => `<div class="col-6"><img src="${fail.image}" class="img-fluid rounded mt-2 mb-1" alt="${fail.name}"><p class="small">${fail.name}</p></div>`).join('') : '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>';
+
 		btnNextEl.innerText = "Play again";
 
 	} else if (btnNextEl.innerText === "Play again") {
