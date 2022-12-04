@@ -1,4 +1,5 @@
 const levelEl = document.querySelector('#level');
+const btnLevelEl = document.querySelector('#btn-level');
 const progressEl = document.querySelector('.progress');
 const progressBarEl = document.querySelector('.progress-bar');
 const imgEl = document.querySelector('#img-mate');
@@ -60,12 +61,12 @@ const clockify = num => { // pass a number, return a number suited for a clock, 
 }
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
-levels.forEach(level => {
-	levelEl.innerHTML += `<button class="btn btn-sm btn-primary my-3">${level}</button>`;
-})
-levelEl.addEventListener('click', e => {
+btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-primary my-3">${level}</button>`).join('');
+
+btnLevelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
-		levelEl.setAttribute('style', 'display: none;');
+		console.log(levelEl);
+		hideEl(levelEl);
 		level = Number(e.target.innerText);
 
 		// add some mock ghost players that have scored random points at random times of the day
