@@ -45,21 +45,11 @@ const getName = id => students.find(student => student.id === id).name; // pass 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const getScoreValue = (score, level) => { // pass score and level, return class color based on result, as a string
-	if (score / level > 0.67) {
-		return 'success';
-	} else if (score / level < 0.33) {
-		return 'danger';
-	} else {
-		return 'warning';
-	}
-}
-
-const getLevelValue = (level, max) => { // pass score and level, return class color based on result, as a string
-	if (level / max > 0.67) {
-		return 'danger';
-	} else if (level / max < 0.33) {
-		return 'success';
+const getColor = (value, max, rev) => {
+	if (value / max > 0.67) {
+		return (!rev) ? 'success' : 'danger';
+	} else if (value / max < 0.33) {
+		return (rev) ? 'success' : 'danger';
 	} else {
 		return 'warning';
 	}
@@ -71,7 +61,7 @@ const clockify = num => { // pass a number, return a number suited for a clock, 
 }
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
-btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-${getLevelValue(level, students.length)} my-3">${level}</button>`).join('');
+btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-${getColor(level, students.length, 1)} my-3">${level}</button>`).join('');
 
 btnLevelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
@@ -127,7 +117,7 @@ const btnNextEventListener = () => {
 
 		resultsEl.innerHTML += `
 			<div class="col-xs-12 col-sm-12 card card-body bg-dark">
-				<p class="fs-1">Your score <span class="badge text-bg-${getScoreValue(score, level)}">${score}</span></p>
+				<p class="fs-1">Your score <span class="badge text-bg-${getColor(score, level)}">${score}</span></p>
 				<p class="fs-3">Max score <span class="badge text-bg-primary">${level}</span></p>
 				<div class="mt-3 m-auto">💥 ⇩ Highscore ⇩ 💥
 					<ol id="high-score"></ol>
@@ -141,7 +131,7 @@ const btnNextEventListener = () => {
 		const now = new Date().toLocaleTimeString();
 		highScore.push({score: score, time: now});
 		highScore.sort((a, b) => b.score - a.score);
-		document.querySelector('#high-score').innerHTML = highScore.slice(0, 10).map(score => `<li class="ml-auto"><span class="badge text-bg-${getScoreValue(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`).join('');
+		document.querySelector('#high-score').innerHTML = highScore.slice(0, 10).map(score => `<li class="ml-auto"><span class="badge text-bg-${getColor(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`).join('');
 
 		document.querySelector('#fails').innerHTML = (fails.length) ? fails.map(fail => `<div class="col-6"><img src="${fail.image}" class="img-fluid rounded mt-2 mb-1" alt="${fail.name}"><p class="small">${fail.name}</p></div>`).join('') : '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>';
 
