@@ -55,20 +55,30 @@ const getScoreValue = (score, level) => { // pass score and level, return class 
 	}
 }
 
+const getLevelValue = (level, max) => { // pass score and level, return class color based on result, as a string
+	if (level / max > 0.67) {
+		return 'danger';
+	} else if (level / max < 0.33) {
+		return 'success';
+	} else {
+		return 'warning';
+	}
+}
+
 const clockify = num => { // pass a number, return a number suited for a clock, as a string (8 => "08", 23 => "23")
 	const str = "0"+getRandomNumber(num);
 	return str.slice(-2);
 }
 
 const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
-btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-primary my-3">${level}</button>`).join('');
+btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-${getLevelValue(level, students.length)} my-3">${level}</button>`).join('');
 
 btnLevelEl.addEventListener('click', e => {
 	if (e.target.tagName === "BUTTON") {
 		hideEl(levelEl);
 		level = Number(e.target.innerText);
 
-		// add some mock ghost players that have scored random points at random times of the day, to highscore
+		// add to highscore some mock ghost players that have scored random points at random times of the day
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
 		highScore.push({score: getRandomNumber(level), time: `${clockify(23)}:${clockify(59)}:${clockify(59)}`});
@@ -101,7 +111,7 @@ const optionEventListener = e => {
 		fails.push(correctStudent);
 	}
 	progressBarEl.setAttribute('style', `width: ${(round / level) * 100}%`);
-	btnNextEl.disabled = false;	
+	btnNextEl.disabled = false;
 }
 
 const btnNextEventListener = () => {
@@ -116,7 +126,7 @@ const btnNextEventListener = () => {
 		optionsEl.innerText = '';
 
 		resultsEl.innerHTML += `
-			<div class="col-xs-12 col-sm-12 card card-body bg-dark mb-1">
+			<div class="col-xs-12 col-sm-12 card card-body bg-dark">
 				<p class="fs-1">Your score <span class="badge text-bg-${getScoreValue(score, level)}">${score}</span></p>
 				<p class="fs-3">Max score <span class="badge text-bg-primary">${level}</span></p>
 				<div class="mt-3 m-auto">💥 ⇩ Highscore ⇩ 💥
@@ -170,6 +180,6 @@ const playRound = (student, level) => {
 const playGame = level => {
 	btnNextEl.innerText = "Next mate";
 	shuffleArray(students);
-	btnNextEl.addEventListener('click', btnNextEventListener)
+	btnNextEl.addEventListener('click', btnNextEventListener);
 	playRound(students[round], level);
 }

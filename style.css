@@ -3,7 +3,14 @@ body > * {
 	text-align: center;
 }
 
-
+hr {
+	background: linear-gradient(to right, #198754, #ffc107, #dc3545);
+	height: 15px;
+	opacity: 1;
+	border: 0;
+	border-radius: 5px;
+	margin: 0 1em 1em 1em;
+}
 
 #btn-level {
 	display: flex;
