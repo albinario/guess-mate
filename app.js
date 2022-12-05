@@ -86,6 +86,7 @@ const resetGame = () => {
 	score = 0;
 	fails = [];
 	correctStudent = null;
+	progressBarEl.classList.add('progress-bar-animated');
 }
 
 const optionEventListener = e => {
@@ -133,10 +134,10 @@ const btnNextEventListener = () => {
 		highScore.sort((a, b) => b.score - a.score);
 		document.querySelector('#high-score').innerHTML = highScore.slice(0, 10).map(score => `<li class="ml-auto"><span class="badge text-bg-${getColor(score.score, level)}">${score.score}</span> <span class="small">${score.time}</span>${(score.time === now) ? ' ⇦' : ''}</li>`).join('');
 
-		document.querySelector('#fails').innerHTML = (fails.length) ? fails.map(fail => `<div class="col-6"><img src="${fail.image}" class="img-fluid rounded mt-2 mb-1" alt="${fail.name}"><p class="small">${fail.name}</p></div>`).join('') : '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>';
+		document.querySelector('#fails').innerHTML = (fails.length) ? fails.map(fail => `<figure class="col-6 figure mt-3 mb-1"><img src="${fail.image}" class="figure-img img-fluid rounded" alt="${fail.name}"><figcaption class="figure-caption">${fail.name}</figcaption></figure>`).join('') : '<p class="mt-3"><em>No one, seems you already had 🍻 with all.</em></p>';
 
 		btnNextEl.innerText = "Play again";
-
+	
 	} else if (btnNextEl.innerText === "Play again") {
 		resetGame();
 		progressBarEl.setAttribute('style', `width: 0%`);
