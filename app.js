@@ -61,7 +61,7 @@ const clockify = num => { // pass a number, return a number suited for a clock, 
 	return str.slice(-2);
 }
 
-const levels = [2, 10, 15, 20, 25, 30, 35, students.length];
+const levels = [5, 10, 15, 20, 25, 30, 35, students.length]; // LPT for testing: add value 2 to this array[0]
 btnLevelEl.innerHTML += levels.map(level => `<button class="btn btn-sm btn-${getColor(level, students.length, 1)} my-3">${level}</button>`).join('');
 
 btnLevelEl.addEventListener('click', e => {
@@ -146,7 +146,7 @@ const btnNextEventListener = () => {
 				comparisonEl.classList.add('alert-warning');
 				comparisonEl.innerText = 'You scored the same again';
 			}
-		}		
+		}
 		scoreLastRound = score;
 
 		const now = new Date().toLocaleTimeString();
