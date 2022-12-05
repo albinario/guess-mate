@@ -12,7 +12,7 @@ let level = 0;
 let round = 0;
 let correctStudent = null;
 let score = 0;
-let scoreLastRound;
+let scoreLastRound = -1;
 let fails = [];
 const highScore = [];
 
@@ -46,7 +46,7 @@ const getName = id => students.find(student => student.id === id).name; // pass 
 const showEl = el => el.classList.remove('hide');
 const hideEl = el => el.classList.add('hide');
 
-const getColor = (value, max, rev) => {
+const getColor = (value, max, rev = 0) => {
 	if (value / max > 0.67) {
 		return (!rev) ? 'success' : 'danger';
 	} else if (value / max < 0.33) {
@@ -121,6 +121,7 @@ const btnNextEventListener = () => {
 			<div class="col-xs-12 col-sm-12 card card-body bg-dark">
 				<p class="fs-1">Your score <span class="badge text-bg-${getColor(score, level)}">${score}</span></p>
 				<p class="fs-3">Max score <span class="badge text-bg-primary">${level}</span></p>
+				<p id="comparison" class="alert hide"></p>
 				<div class="mt-3 m-auto">💥 ⇩ Highscore ⇩ 💥
 					<ol id="high-score"></ol>
 				</div>
@@ -131,8 +132,22 @@ const btnNextEventListener = () => {
 		`;
 
 		if (scoreLastRound >= 0) {
-			console.log("Diff:", score, scoreLastRound);
-		}
+			const comparisonEl = document.querySelector('#comparison');
+			showEl(comparisonEl);
+			let diff = score-scoreLastRound;
+			if (diff > 0) {
+				comparisonEl.classList.add('alert-success');
+				comparisonEl.innerText = `You improved your score by ${diff} point${(diff === 1) ? '' : 's'}`;
+			} else if (diff < 0) {
+				diff = Math.abs(diff);
+				comparisonEl.classList.add('alert-danger');
+				comparisonEl.innerText = `You worsened your score by ${diff} point${(diff === 1) ? '' : 's'}`;
+			} else {
+				comparisonEl.classList.add('alert-warning');
+				comparisonEl.innerText = 'You scored the same again';
+			}
+		}		
+		scoreLastRound = score;
 
 		const now = new Date().toLocaleTimeString();
 		highScore.push({score: score, time: now});
